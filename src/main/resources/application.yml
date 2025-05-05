@@ -1,0 +1,26 @@
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 3000 # 3 seconds to connect
+        response-timeout: 5s
+      routes:
+        - id: ecommerce-order-service
+          uri: lb://ecommerce-order-service
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - AuthenticationFilter
+        - id: ecommerce-product-service
+          uri: lb://ecommerce-product-service
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - AuthenticationFilter
+        - id: ecommerce-authentication-service
+          uri: lb://ecommerce-authentication-service
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+      gateway: DEBUG
